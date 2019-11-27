@@ -1,0 +1,190 @@
+<!-- extends表明此页面继承自 base.html 文件 -->
+{% extends "base.html" %}
+{% load staticfiles %}
+{% load taggit_templatetags2_tags %}
+<!-- 写入 base.html 中定义的 title -->
+{% block title %}
+大圣的个人网站
+{% endblock title %}
+
+<!-- 写入 base.html 中定义的 content -->
+{% block content %}
+<div class="container" style="text-align: center;">
+    <div class="row">
+        <div class="col-md-12 col-sm-12 col-offset-1">
+            {% if user.avatar %}
+            <div style="padding: 5px 30% 5px 30%;"  class="up-img-cover"  id="up-img-touch" >
+                <img class="am-circle" src="{{ user.avatar.url }}" style="width: 120px; height: 120px; border-radius: 15%;">
+            </div>
+            {% else %}
+            <div style="padding: 5px 30% 5px 30%;"  class="up-img-cover"  id="up-img-touch" >
+                <img class="am-circle" src="http://qiniu.shanyonggang.cn/imfos/user-no.png" style="width: 120px; height: 120px; border-radius: 15%;">
+            </div>
+            {% endif %}
+            {% if user.nickname %}
+            <span>昵称：{{ user.nickname }}</span>
+            {% else %}
+            <span>用户名：<span style="color: #a5a5a5">{{ user.username }}</span></span>
+            {% endif %}
+            <div style="background-color: #aa81a1;padding:15px 0px 15px 2%;border-radius: 5px;font-size: 20px;margin-bottom: 20px;margin-top: 30px;">
+                <span>用户个人信息</span>
+            </div>
+            <div class="row" style="padding: 15px 0 15px 0;">
+                <div class="col-md-3" style="text-align: center;margin-top: 10px;">
+                    {% if user.avatar %}
+                        <div style="padding: 5px 30% 5px 30%;text-align: center;">
+                            <img src="{{ user.avatar.url }}" style="width: 120px; height: 120px; border-radius: 15%;">
+                        </div>
+                    {% else %}
+                        <span>用户头像</span>
+                        <h5 class="col-md-12"><img src="http://qiniu.shanyonggang.cn/imfos/user-no.png" style="width: 120px; height: 120px; border-radius: 15%;"></h5>
+                    {% endif %}
+                </div>
+                <div class="col-md-9" style="text-align: left;">
+                    <div style="padding-bottom: 10px;" data-toggle="modal" data-target="#myModal_edit_info">
+                        <a><span class="glyphicon glyphicon-edit"></span>编辑</a>
+                    </div>
+                    <div style="margin-bottom: 5px;">登录名(不可编辑)：<span style="color: #a5a5a5">{{ user.username }}</span></div> 
+                    <div class="row">
+                        <div class="col-md-6" style="line-height: 30px;text-align: left;">
+                            {% if user.nickname %}
+                            <span>昵称：<span style="color: #a5a5a5">{{ user.nickname }}</span></span>
+                            {% else %}
+                            <span>昵称：<span style="color: #a5a5a5">暂无</span></span>
+                            {% endif %}
+                            <br>
+                            {% if user.your_url %}
+                            <span>个人网站：<span style="color: #a5a5a5">{{ user.your_url }}</span></span>
+                            {% else %}
+                            <span>个人网站：<span style="color: #a5a5a5">暂无</span></span>
+                            {% endif %}
+                            <br>
+                            {% if user.phone %}
+                            <span>手机号：<span style="color: #a5a5a5">{{ user.phone }}</span></span>
+                            {% else %}
+                            <span>手机号：<span style="color: #a5a5a5">暂无</span></span>
+                            {% endif %}
+                            <br>
+                            <span>注册时间：<span style="color: #a5a5a5">{{ user.c_time }}</span></span>
+                        </div>
+                        <div class="col-md-6" style="line-height: 30px;text-align: left;">
+                            {% if user.email %}
+                            <span>邮箱：<span style="color: #a5a5a5">{{ user.email }}</span></span>
+                            {% else %}
+                            <span>邮箱：<span style="color: #a5a5a5">暂无</span></span>
+                            {% endif %}
+                            <br>
+                            {% if user.QQ_num %}
+                            <span>QQ：<span style="color: #a5a5a5">{{ user.QQ_num }}</span></span>
+                            {% else %}
+                            <span>QQ：<span style="color: #a5a5a5">暂无</span></span>
+                            {% endif %}
+                            <br>
+                            {% if user.wechat %}
+                            <span>微信：<span style="color: #a5a5a5">{{ user.wechat }}</span></span>
+                            {% else %}
+                            <span>微信：<span style="color: #a5a5a5">暂无</span></span>
+                            {% endif %}
+                            <br>
+                            <span>最后登录时间：<span style="color: #a5a5a5">{{ user.last_login }}</span></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="myModal_edit_info" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="myModalLabel">更新个人信息</h4>
+            </div>
+            <div class="modal-body" style="text-align: center;background-color: #FBEED5;">
+                <form method="post" action="/userprofile/update/" enctype="multipart/form-data" >
+                    {% csrf_token %}
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="Input-Info">昵称</label>
+                                {% if user.nickname %}
+                                <input type="text" class="form-control" id="Input-Info" name="nickname" placeholder="{{ user.nickname }}">
+                                {% else %}
+                                <input type="text" class="form-control" id="Input-Info" name="nickname" placeholder="您的昵称">
+                                {% endif %}
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="Input-Info-phone">手机号</label>
+                                {% if user.phone %}
+                                <input type="text" class="form-control" id="Input-Info-phone" name="phone" placeholder="{{ user.phone }}">
+                                {% else %}
+                                <input type="text" class="form-control" id="Input-Info-phone" name="phone" placeholder="请输入您的手机号(介意可不填写)">
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="Input-Self-Web">个人网站</label>
+                                {% if user.your_url %}
+                                <input type="text" class="form-control" id="Input-Self-Web" name="user_url" placeholder="{{ user.your_url }}">
+                                {% else %}
+                                <input type="text" class="form-control" id="Input-Self-Web" name="user_url" placeholder="Your Url">
+                                {% endif %}
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="Input-Email">邮箱</label>
+                                {% if user.email %}
+                                <input type="email" class="form-control" id="Input-Email" name="email" placeholder="{{ user.email }}">
+                                {% else %}
+                                <input type="email" class="form-control" id="Input-Email" name="email" placeholder="Your Email">
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="Input-Self-wechat">您的微信</label>
+                                {% if user.wechat %}
+                                <input type="text" class="form-control" id="Input-Self-wechat" name="wechat" placeholder="{{ user.wechat }}">
+                                {% else %}
+                                <input type="text" class="form-control" id="Input-Self-wechat" name="wechat" placeholder="Your Wechat">
+                                {% endif %}
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="Input-QQ">您的QQ</label>
+                                {% if user.wechat %}
+                                <input type="text" class="form-control" id="Input-QQ" name="qq" placeholder="{{ user.QQ_num }}">
+                                {% else %}
+                                <input type="text" class="form-control" id="Input-QQ" name="qq" placeholder="Your QQ">
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label for="Input-QQ">您的专属头像</label>
+                            <input type="file" name="images" value="选择上传的图片" id="images">
+                        </div> 
+                    </div>
+                    <button type="submit" class="btn btn-primary">保存信息</button>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-dismiss="modal">关闭</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!--图片上传框-->
+
+{% endblock %}

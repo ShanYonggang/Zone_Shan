@@ -1,0 +1,200 @@
+{% load cache %}
+{% load notifications_tags %}
+{% notifications_unread as unread_count %}
+<div class="navbar navbar-default">
+    <div class="container-fluid">
+      <!-- Brand and toggle get grouped for better mobile display -->
+      <div class="navbar-header">
+        <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+          <span class="sr-only">Toggle navigation</span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="{% url 'index:blog_list' %}"><span class=" glyphicon glyphicon-home"></span>大圣的专属空间</a>
+      </div>
+      <!-- Collect the nav links, forms, and other content for toggling -->
+      <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+        <ul class="nav navbar-nav">
+        {% cache 500 classify %}
+          <li class="dropdown">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"> <span class="glyphicon glyphicon-list"></span> 文章<span class="caret"></span></a>
+            <ul class="dropdown-menu">
+              <li><a href="{% url 'index:blog_list' %}">所有文章</a></li>
+              <li role="separator" class="divider"></li>
+              {% for classify_name in classify %}
+              <li><a href="{% url 'index:blog_list' %}?column_id={{ classify_name.id }}">{{ classify_name.title }}</a></li>
+              <li role="separator" class="divider"></li>
+              {% endfor %}
+            </ul>
+          </li>
+        {% endcache %}
+          <li><a href="#"> <span class="glyphicon glyphicon-book"></span> 教程</a></li>
+          <li><a href="/knowledge/"> <span class="glyphicon glyphicon-gift"></span> 资料</a></li>
+          <li><a href="/development/"> <span class="glyphicon glyphicon-heart"></span> 事件</a></li>
+          <li><a href="/friend_link/"> <span class="glyphicon glyphicon-link"></span> 友链</a></li>
+          <li><a href="/about/"> <span class="glyphicon glyphicon-user"></span> 关于</a></li>
+        </ul>
+        <ul class="nav navbar-nav navbar-right">
+            {% if user.is_authenticated %}
+              <!-- 如果用户已经登录，则显示用户名下拉框 -->
+              <li class="dropdown">
+
+                  {% if user.nickname %}
+                      <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                      {% if unread_count %}
+                          <span style="width: 10px;height: 10px;background-color: red;border-radius: 50%;display: inline-block"></span>
+                      {% endif %}
+                      {% if user.socialaccount_set.all.0.get_avatar_url %}
+                          <img src="{{ user.socialaccount_set.all.0.get_avatar_url }}" alt=""  style="width: 30px; height: 30px; border-radius: 50%;">
+                          {{ user.nickname }}<span class="caret"></span>
+                          </a>
+                      {% else %}
+                          {% if user.avatar %}
+                          <img src="{{ user.avatar.url }}" alt=""  style="width: 30px; height: 30px; border-radius: 50%;">
+                          {% endif %}
+                              {{ user.nickname }}<span class="caret"></span>
+                          </a>
+                        {% endif %}
+                  {% else %}
+                      <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                       {% if unread_count %}
+                          <span style="width: 10px;height: 10px;background-color: red;border-radius: 50%;display: inline-block"></span>
+                      {% endif %}
+                      {% if user.socialaccount_set.all.0.get_avatar_url %}
+                          <img src="{{ user.socialaccount_set.all.0.get_avatar_url }}" alt=""  style="width: 30px; height: 30px; border-radius: 50%;">
+                          {{ user.username }}<span class="caret"></span>
+                          </a>
+                      {% else %}
+                          {% if user.avatar %}
+                          <img src="{{ user.avatar.url }}" alt=""  style="width: 30px; height: 30px; border-radius: 50%;">
+                          {% endif %}
+                              {{ user.username }}<span class="caret"></span>
+                          </a>
+                        {% endif %}
+                  {% endif %}
+                  <ul class="dropdown-menu">
+                    <li>
+                        <a href="{% url 'notice:list' %}">
+                            系统消息
+                        {% if unread_count %}
+                        <span class="badge badge-danger">{{ unread_count }}</span>
+                        {% endif %}
+                        </a>
+                    </li>
+                    <li role="separator" class="divider"></li>
+                    <li><a href="{% url 'user_profile:update' %}">个人信息</a></li>
+                    <li role="separator" class="divider"></li>
+                    <li><a href="{% url 'user_profile:logout' %}">退出登录</a></li>
+                  </ul>
+              </li>
+            <!-- 如果用户未登录，则显示 “登录” -->
+            {% else %}
+<!--            django_allauth-->
+                <a href="{% url 'account_signup' %}" type="button" class="btn btn-primary btn-lg user_register">注册</a>
+                <a href="{% url 'account_login' %}" class="btn btn-primary btn-lg user_login">登录</a>
+<!--            自写的登录注册-->
+<!--              <button type="button" class="btn btn-primary btn-lg user_register" data-toggle="modal" data-target="#myModal">-->
+<!--                  注册-->
+<!--              </button>-->
+<!--              <button type="button" class="btn btn-primary btn-lg user_login" data-toggle="modal" data-target="#myModal">-->
+<!--                  登录-->
+<!--              </button>-->
+            <!-- if 语句在这里结束 -->
+            {% endif %}
+        </ul>
+        <form class="navbar-form navbar-right" role="search" action="{% url 'haystack_search' %}" method="get">
+            <div class="input-group">
+                <input type="search" class="form-control" size="30" name="q" placeholder="请输入关键字" required>
+                <span class="input-group-btn">
+                    <button class="btn btn-default btn-search" type="submit">搜索</button>
+                </span>
+            </div>
+        </form>
+      </div><!-- /.navbar-collapse -->
+    </div><!-- /.container-fluid -->
+  </div>
+
+<!-- 用户登录框 -->
+<!-- Modal -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="title">用户登录</h4>
+      </div>
+      <div class="modal-body">
+        <div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 用户登录div设计 -->
+<div style="display: none;" id="add_html">
+  <div class="container-fluid" id="change_login">
+      <div class="row">
+          <div class="col-8">
+              <form class="form-group" method="post" action="#" id="login_form" enctype="multipart/form-data">
+                  {% csrf_token %}
+                  <div class="form-group">
+                      <label for="username">用户名</label>
+                      <input class="form-control" type="text" id="username" name="username" placeholder="">
+                  </div>
+                  <div class="form-group">
+                      <label for="password">密码</label>
+                      <input class="form-control" type="password" id="password" name="password" placeholder="">
+                  </div>
+                  <div style="margin-right: auto;margin-left: auto;background-color:silver,saddlebrown;width:150px;text-align: center">
+                      <b id="login-fail" style="color: red"></b>
+                  </div>
+                  <div class="text-right">
+                      <button class="btn btn-primary" type="button" onclick="login_submit()">登录</button>
+                      <button class="btn btn-danger" data-dismiss="modal">取消</button>
+                  </div>
+                  <a href="" onclick="chang_user_register_click()" data-toggle="modal" data-target="#register">还没有账号？点我注册</a>               
+                </form>
+          </div>
+      </div>
+  </div>
+  <!-- 用户注册div设计 -->
+  <div id="change_register">
+    <form class="form-group" method="post" action=""enctype="multipart/form-data">
+      {% csrf_token %}
+          <div class="form-group">
+              <label for="username_re">用户名</label>
+              <input class="form-control" type="text" id="username_re" name="username_re"  placeholder="6-15位字母或数字" required>
+          </div>
+          <div class="form-group">
+              <label for="password1">密码</label>
+              <input class="form-control" type="password" id="password1" name="password1" placeholder="至少6位字母或数字" required>
+          </div>
+          <div class="form-group">
+              <label for="password2">再次输入密码</label>
+              <input class="form-control" type="password" id="password2" name="password2" placeholder="至少6位字母或数字" required>
+          </div>
+          <div class="form-group">
+              <label for="email">邮箱</label>
+              <input class="form-control" type="email" id="email" name="email"  placeholder="例如:123@123.com">
+          </div>
+          <div style="margin-right: auto;margin-left: auto;background-color:silver,saddlebrown;width:150px;text-align: center">
+            <b id="register-fail" style="color: red"></b>
+          </div>
+          <div class="text-right">
+              <button class="btn btn-primary" type="button" onclick="register_sbumit()">提交</button>
+              <button class="btn btn-danger" data-dismiss="modal">取消</button>
+          </div>
+          <a href="" onclick="chang_user_login_click()" data-toggle="modal" data-target="#login">已有账号？点我登录</a>
+    </form>
+  </div>
+</div>
+<script>
+    $.ajaxSetup({
+        data:{csrfmiddlewaretoken:'{{ csrf_token }}'}
+    })
+</script>
+{% load staticfiles %}
+<script src="{% static 'login_register/login_register.js' %}"></script>
+
+

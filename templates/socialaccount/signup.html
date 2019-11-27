@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+
+{% load i18n %}
+{% load crispy_forms_tags %}
+
+{% block title %}关联 | 大圣的专属空间{% endblock %}
+
+{% block content %}
+<div class="container" style="text-align: center;">
+    <div class="row">
+        <div class="col-md-4"></div>
+        <div class="col-md-4">
+            <h4>个人信息核对</h4>
+
+            <div>
+                {% blocktrans with provider_name=account.get_provider.name site_name=site.name %}
+                您正在使用<span style="color: chocolate">{{provider_name}}</span>账号登录 <span style="color: chocolate">{{site_name}}</span>
+                <br>
+                请您核实以下信息：
+                {% endblocktrans %}
+            </div>
+
+            <form class="signup" id="signup_form" method="post" action="{% url 'socialaccount_signup' %}">
+              {% csrf_token %}
+              {{ form | crispy }}
+              {% if redirect_field_value %}
+              <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
+              {% endif %}
+              <button class="btn btn-primary" type="submit">确认</button>
+            </form>
+        </div>
+    </div>
+</div>
+<style>
+    .signup{
+        text-align: left;
+    }
+</style>
+{% endblock %}

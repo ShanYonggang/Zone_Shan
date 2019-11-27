@@ -1,0 +1,56 @@
+<!-- extends表明此页面继承自 base.html 文件 -->
+{% extends "base.html" %}
+{% load staticfiles %}
+{% load taggit_templatetags2_tags %}
+
+<!-- 写入 base.html 中定义的 title -->
+{% block title %}
+添加友链 | 大圣的专属空间
+{% endblock title %}
+
+<!-- 写入 base.html 中定义的 content -->
+{% block content %}
+<style>
+
+</style>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12 link_submit" style="text-align: center; margin-top: 10px;font-size: 1.5em;">
+            <a href="/friend_link/">--点击此处，返回友链列表--</a>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-2 col-lg-2 hidden-xs">
+        </div>
+        <div class="col-md-8 col-lg-8" style="text-align: center;font-size: 1.5em;">
+            <div class="row">
+                <div class="col-12 link_submit" style="text-align: center; margin-top: 10px;font-size: 1.0em;">
+                    <span>--我的站点信息--</span>
+                    <div>
+                        网站图标：<a href="http://qiniu.shanyonggang.cn//my_web/infotimg.jpg" target="_blank"><img src="http://qiniu.shanyonggang.cn//my_web/infotimg.jpg" alt="" width="10%" style="border-radius: 50%"></a>
+                    </div>
+                    <div style="margin-top: 15px">
+                        网站名称：大圣的专属空间
+                    </div>
+                    <div style="margin-top: 15px">
+                        网站链接：<a href="https://www.shanyonggang.cn">https://www.shanyonggang.cn</a>
+                    </div>
+                </div>
+            </div>
+            <hr>
+            <div>
+                <br>
+                您需要提供以下基本信息：
+                <br>
+                您的昵称、网站名称、邮箱地址（请务必填写正确）、网站地址、与网站相关的图片一张
+            </div>
+            <form enctype="multipart/form-data" action="{% url 'friend_link:add_link' %}" method="post" id="submit_link">
+                {% csrf_token %}
+                {{ form.as_ul }}
+                <input type="submit" value="提交友链" id="git_link">
+            </form>
+        </div>
+    </div>
+</div>
+<link rel="stylesheet" href="{% static 'friend_link/css/friend_link.css' %}">
+{% endblock content %}

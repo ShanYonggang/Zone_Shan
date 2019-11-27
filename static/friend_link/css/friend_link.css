@@ -1,0 +1,74 @@
+/*友情链接显示页面的css*/
+#friend_link span{
+    margin-right: 6%;
+    margin-left: 6%;
+    font-size: 0.8em;
+}
+#friend_link span a{
+    color: #474747;
+    text-decoration: none;
+}
+#friend_link span a:hover{
+    color: chocolate;
+}
+.link_submit a{
+    text-decoration: none;
+    font-weight: bold;
+}
+.link_submit a:hover{
+    color: chocolate;
+}
+/*友情链接添加页面的css*/
+#submit_link{
+    margin-top:20px;
+    border: 1px solid #e7e7e7;
+    border-radius: 10px;
+    padding: 15px;
+    text-align: left;
+}
+#submit_link li{
+    margin: 15px;
+}
+#submit_link li label{
+    width: 100%;
+}
+#submit_link li input{
+    width: 100%;
+    padding: 5px;
+    font-weight: lighter;
+    /*border-radius: 5px;*/
+}
+#git_link{
+    margin-left: 15px;
+    padding: 5px 10px 5px 10px;
+    background-color: chocolate;
+    color: white;
+    border: none;
+    border-radius: 5px;
+}
+#git_link:hover{
+    background-color: green;
+    color: black;
+}
+.errorlist{
+    color: red;
+}
+#friend_link span{
+    margin-right: 6%;
+    margin-left: 6%;
+    font-size: 0.8em;
+}
+#friend_link span a{
+    color: #474747;
+    text-decoration: none;
+}
+#friend_link span a:hover{
+    color: chocolate;
+}
+.link_submit a{
+    text-decoration: none;
+    font-weight: bold;
+}
+.link_submit a:hover{
+    color: chocolate;
+}

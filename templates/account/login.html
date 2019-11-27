@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+
+{% load i18n %}
+{% load crispy_forms_tags %}
+{% load account socialaccount %}
+
+{% block title %}用户登录 | 大圣的专属空间{% endblock %}
+
+{% block content %}
+<div class="container" style="text-align: center;">
+    <div class="row">
+        <div class="col-md-4"></div>
+        <div class="col-md-4">
+            <h4>本地用户登录</h4>
+            <br>
+            <form class="login" method="POST" action="{% url 'account_login' %}">
+                {% csrf_token %}
+                 {{ form | crispy }}
+                <a href="/accounts/password/reset/">忘记密码了？</a>
+                <div class="text-right">
+                    <button class="btn btn-primary" type="submit">登录</button>
+                </div>
+            </form>
+            <br>
+            {% get_providers as socialaccount_providers %}
+            {% if socialaccount_providers %}
+            <div class="socialaccount_ballot">
+                <h4 class="mb-2 mt-4" style="border-top: #8f989f 1px solid;padding-top: 15px">第三方登录</h4>
+                    <span style="font-size: 2.0em">
+                        <a href="/accounts/github/login/?process=login"><i class="fab fa-github"></i></a>
+<!--                        <a href="/accounts/baidu/login/?process=login">baidu</a>-->
+                            <a href="/accounts/weibo/login/?process=login" style="color: indianred;"><i class="fab fa-weibo"></i></a>
+<!--                        <a href="#"><i class="fab fa-weixin"></i></a>-->
+<!--                        <a href=""><i class="fab fa-linkedin"></i></a>-->
+<!--                        <a href=""><i class="fab fa-gitlab"></i></a>-->
+                    </span>
+
+<!--                <ul class="socialaccount_providers">-->
+<!--                    {% include "socialaccount/snippets/provider_list.html" with process="login" %}-->
+<!--                </ul>-->
+            </div>
+
+<!--            {% include "socialaccount/snippets/login_extra.html" %}-->
+
+<!--            {% else %}-->
+<!--                <p>{% blocktrans %}If you have not created an account yet, then please-->
+<!--                <a href="{{ signup_url }}">sign up</a> first.{% endblocktrans %}</p>-->
+<!--            {% endif %}-->
+        </div>
+    </div>
+</div>
+
+<style>
+    .login{
+        text-align: left;
+    }
+</style>
+
+{% endblock %}

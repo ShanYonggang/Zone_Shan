@@ -1,0 +1,428 @@
+<!-- extends表明此页面继承自 base.html 文件 -->
+{% extends "base.html" %}
+{% load staticfiles %}
+<!--引入多级评论标签-->
+{% load mptt_tags %}
+<!-- 写入 base.html 中定义的 title -->
+{% block title %}
+博客文章 | 大圣的专属空间
+{% endblock title %}
+
+<!-- 写入 base.html 中定义的 content -->
+{% block content %}
+
+<div class="container-fluid">
+    <div class="row">
+        <!-- 新增的目录 -->
+        <div class="col-sm-1 col-md-1 hidden-xs hidden-sm" style="margin-right: 0%;">
+            <div style="border: 1px solid #e7e7e7;padding: 5px;border-radius: 10px;position: fixed;z-index: 100;">
+                <h4><strong>目录</strong></h4>
+                <hr>
+                <ol class="blog_column">
+                </ol>
+            </div>
+        </div>
+        <div class="col-xs-12 col-sm-8 col-md-8" style="padding: 0 5px 0 5px;">
+            <div class="col-xs-12 col-sm-12 col-md-12">
+                <!--文章标题-->
+                <div style="text-align: center;margin-top: 20px;font-size: 1.9em;">
+                    {{ article.title }}
+                </div>
+                <!--文章id值-->
+                <div style="display: none" id="article_id">
+                    {{ article.id }}
+                </div>
+                <!--文章说明-->
+                <div style="text-align: center;font-size: 13px;padding: 5px;border-bottom: 1px solid #e7e7e7;">
+                    <span><a  class="glyphicon glyphicon-tag" href="{% url 'index:blog_list' %}?order=article_view&column_id={{ article.column_id }}&tag={{ tag }}">{{ article.column }}</a></span>  .  <span class="glyphicon glyphicon-time">{{ article.create_time|date:'Y-m-d' }}</span>  .  <span class="glyphicon glyphicon-user">{{ article.author }}</span>  .  <span> <a href="#gitalk-container" class="glyphicon glyphicon-hand-right">我要评论</a></span>  .  <span class="glyphicon glyphicon-eye-open">{{ article.article_view }}阅读</span>
+                </div>
+                <!--文章内容-->
+                <div style="line-height: 30px;padding-top: 20px;padding-bottom: 20px;margin-bottom: 30px;border-bottom: 1px solid #b5aeb1" id="article_body">
+                    <div class="hidden-md hidden-lg">
+                        <h4>目录</h4>
+                        <ol class="blog_column">
+                        </ol>
+                    </div>
+                    {{ article.body|safe }}
+                    <style>
+                        #article_body li{
+                            list-style:disc;
+                        }
+                        #article_body ul{
+                            padding-left: 0px;
+                        }
+                    </style>
+                    <div class="row">
+                        {% if pre_article %}
+                            <a href="/article_detail/{{ pre_article.id }}/" class="btn" style="background-color: chocolate;color: cornsilk;"><< 上一篇</a>
+                        {% endif %}
+                        {% if next_article %}
+                            <a href="/article_detail/{{ next_article.id }}/" class="btn" style="float: right;background-color: chocolate;color: cornsilk;">下一篇 >></a>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <!-- 文章标签 -->
+                <div id="content_tags">
+                    <span class="glyphicon glyphicon-tags"></span> &nbsp
+                    {% for tag in article.tags.all %}
+                    <a href="{% url 'index:blog_list' %}?tag={{ tag }}">
+                        {{ tag }}
+                    </a>
+                    {% endfor %}
+                </div>
+                <!-- 翻页功能显示 -->
+                <div>
+                    {% if pre_article %}
+                    <p>前一篇：<a href="/article_detail/{{ pre_article.id }}/">{{ pre_article }}</a></p>
+                    {% else %}
+                    <p>前一篇：已经是第一篇文章了！</p>
+                    {% endif %}
+                    {% if next_article %}
+                    <p>后一篇：<a href="/article_detail/{{ next_article.id }}/">{{ next_article }}</a></p>
+                    {% else %}
+                    <p>后一篇：已经是最后一篇文章了！</p>
+                    {% endif %}
+                </div>
+                <!-- 底部声明文件 -->
+                <div id="bottom_int">
+                    <div>本文标题：<a href="">{{ article.title }}</a></div>
+                    <div>本文作者：<a href="{% url 'index:blog_list' %}">{{ article.author }}</a></div>
+                    <div>发布时间：{{ article.create_time }}</div>
+                    <div>许可协议： 署名-非商业性使用 4.0 国际许可协议</div>
+                    <div>
+                        <a href="https://creativecommons.org/licenses/by-nc/4.0/">
+                            <img alt="知识共享许可协议" src="https://licensebuttons.net/l/by-nc/4.0/88x31.png" title="知识共享署名/非商业性使用">
+                        </a>
+                        &nbsp &nbsp
+                        <span>转载请保留原文链接及作者</span>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-12" style="text-align: center;margin-top: 40px;padding: 0 10% 0 10%;margin-bottom: 60px;">
+                        <div style="text-align: center;
+                                border-left: 5px solid #d87b26;
+                                border-right: 5px solid #d87b26;
+                                background-color: #e2e3e5;
+                                padding: 10px;
+                                color: chocolate;
+                                margin: 5px 0 5px 0;">
+                            <span id="jinrishici-sentence">正在加载今日诗词....</span>
+                            <script src="https://sdk.jinrishici.com/v2/browser/jinrishici.js" charset="utf-8"></script>
+                        </div>
+                        <div>您的支持是博主写作最大的动力，如果您喜欢我的文章，感觉我的文章对您有帮助，请狠狠点击下面的</div>
+
+                        <div style="margin-top: 20px;" id="support_me">
+                            <button  type="button" id="button_support" data-toggle="modal" onclick="validate_is_like(
+                                '{% url 'index:increase_likes' article.id %}',
+                                {{ article.id }},
+                                {{ article.like }}); MtaH5.clickStat('support_click')">
+                                <span class="glyphicon glyphicon-thumbs-up"></span>
+                                  很不错呦! <span id="likes_number">({{ article.like }})</span>
+                            </button>
+                            <span class="glyphicon glyphicon-heart" style="color: crimson;font-size: 30px;"></span>
+                            <button type="button" id="button_give" data-toggle="modal" data-target="#myModal_give" onclick="MtaH5.clickStat('give_click')">
+                                <span class="fas fa-coffee"></span>  请喝咖啡！
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <!--gittalk评论插件-->
+                <div id="gitalk-container"></div>
+                <!--自定义评论模块-->
+                <!-- 发表评论 -->
+                <hr style="margin-top: -30px;">
+                {% if user.is_authenticated %}
+                <div>
+                    <form action="{% url 'comments:post_comment' article.id %}" method="POST">
+                    {% csrf_token %}
+                        <p style="padding: 20px 20px 0 0;font-size: 1.2em;margin-bottom: 15px;">
+                            我有问题想咨询：
+                        </p>
+                        <div class="form-group">
+                            {{ comment_form.media }}
+                            {{ comment_form.body }}
+                        </div>
+                        <!-- 提交按钮 -->
+                        <button type="submit" class="btn btn-primary ">发表评论</button>
+                    </form>
+                </div>
+                <br>
+                {% else %}
+                    <br>
+                    <h5 class="justify-content-center" style="text-align: center;font-size: 1.3em;">
+                        请<a href="{% url 'account_login' %}">
+                            登录
+                        </a>
+                        后回复
+                    </h5>
+                    <div style="text-align: center;">
+                        <a href="/accounts/weibo/login/?process=login" style="font-size: 3.0em;color: indianred;" id="weibo_login"><i class="fab fa-weibo"></i></a>
+                         <a href="/accounts/github/login/?process=login" style="font-size: 3.0em;" id="github_login"><i class="fab fa-github"></i></a>
+                        <div style="width: 140px;border-radius: 4px;padding:8px;background-color: grey;font-size: 1em;margin-left: 40%;display: none" id="github_show">
+                            第三方登录
+                        </div>
+                    </div>
+                <script>
+                    $('#github_login').mouseover(
+                        function() {
+                            $('#github_show')[0].style.display = 'block';
+                            $('#github_show').text("用github帐号登录");
+                        }
+                    )
+                    $('#github_login').mouseout(
+                        function() {
+                            $('#github_show')[0].style.display = 'none';
+                            $('#github_show').text("用github帐号登录");
+                        }
+                    )
+                    $('#weibo_login').mouseover(
+                        function() {
+                            $('#github_show')[0].style.display = 'block';
+                            $('#github_show').text("用微博帐号登录");
+                        }
+                    )
+                    $('#weibo_login').mouseout(
+                        function() {
+                            $('#github_show')[0].style.display = 'none';
+                            $('#github_show').text("用微博帐号登录");
+                        }
+                    )
+                </script>
+                    <hr>
+                {% endif %}
+                <!-- 显示评论 -->
+                {% load mptt_tags %}
+                {% if comments.count == 0 %}
+                <h4 style="padding: 15px;background-color: chocolate;border-radius: 15px;font-size: 1em;">当前暂无评论，点击登录来做第一个吃螃蟹的人吧！</h4>
+                <hr>
+                {% else %}
+                <h4 style="padding: 15px;background-color: chocolate;border-radius: 15px" id="comment_count">当前共有{{ comments.count }}条评论</h4>
+                <hr>
+                {% endif %}
+                <div class="row">
+                    <!-- 遍历树形结构 -->
+                    {% recursetree comments %}
+                        <!-- 给 node 取个别名 comment -->
+                        {% with comment=node %}
+                            <div class="col-md-12">
+                                <div class="row">
+                                    <div class="col-md-1 col-sm-2 col-xs-2" style="padding-left: 15px;padding-right: 10px;">
+                                        <div>
+<!--                                            <li>{{ user.socialaccount_set.all.0.get_avatar_url }}</li>-->
+<!--                                            <br>-->
+<!--                                            <li>{{ user.socialaccount_set.all.0.get_provider_account }}</li>-->
+<!--                                            <br>-->
+<!--                                            <li>{{ user.socialaccount_set.all.0.get_provider }}</li>-->
+<!--                                            <br>-->
+<!--                                            <li>{{ user.socialaccount_set.all.0.get_profile_url }}</li>-->
+                                            {% if comment.user.socialaccount_set.all.0.get_avatar_url %}
+                                            <!--跳转至该用户的github页面-->
+                                            <a href="{{ comment.user.socialaccount_set.all.0.get_profile_url }}" target="_blank" title="前往{{ comment.user }}的个人网站">
+                                                <img src="{{ comment.user.socialaccount_set.all.0.get_avatar_url }}" alt="comment." width="40px" height="40px" style="border-radius: 30%">
+                                            </a>
+                                            {% else %}
+                                                {% if comment.user.avatar %}
+                                                <img src="{{ comment.user.avatar }}" alt="comment." width="40px" height="40px" style="border-radius: 30%">
+                                                {% else %}
+                                                <img src="http://qiniu.shanyonggang.cn/imfos/user-no.png" alt="comment." width="40px" height="40px" style="border-radius: 30%">
+                                                {% endif %}
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                    <div class="col-md-11 col-xs-10 col-sm-10">
+                                        <p>
+                                            <strong style="color: #d87b26">
+                                                {{ comment.user }}
+                                            </strong>
+                                            {% if comment.reply_to %}
+                                                <i class="far fa-arrow-alt-circle-right"
+                                                   style="color: cornflowerblue;"
+                                                ></i>
+                                                <strong style="color: pink">
+                                                    {{ comment.reply_to }}
+                                                </strong>
+                                            {% endif %}
+                                        </p>
+                                        <div>{{ comment.body|safe }}</div>
+                                        <div>
+                                            <span style="color: gray">
+                                                {{ comment.created|date:"Y-m-d H:i" }}
+                                            </span>
+                                            <!-- 加载 modal 的按钮 -->
+                                            {% if user.is_authenticated %}
+                                            <a href="/comments/post-comment/{{ article.id }}/{{ comment.id }}">回复</a>
+                                            {% else %}
+                                            <a class="btn btn-light btn-sm text-muted comment_user_login"
+                                               href="#"
+                                               >
+                                                回复
+                                            </a>
+                                            {% endif %}
+                                        </div>
+                                        <hr>
+                                        {% if not comment.is_leaf_node %}
+                                        <div class="children" style="margin-left: -15px;">
+                                            {{ children }}
+                                        </div>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+                        {% endwith %}
+                    {% endrecursetree %}
+                </div>
+            </div>
+        </div>
+<!--        详细页面右侧内容部分-->
+        <div  class="hidden-xs col-sm-3 col-md-3">
+            <hr>
+            <div class="detail_right">
+                <h3><span>关于我</span></h3>
+                <div style="text-align: center;">
+                    <p>
+                        <img src='{% static "index/blog_list/upload/about-image.jpg" %}' alt width=120 style="border-radius: 20px">
+                        <br>
+                        汽车工程师，现就职于北京某汽车公司
+                        <br>
+                        业余时间敲代码，主要是用Python语言
+                        <br>
+                        业余爱好：健身、摄影、登山
+                        <br>
+                        建此站的目的主要是记录自己的学习和日常生活
+                    </p>
+                    <br>
+                    <a href="/about/">
+                        <span>More About Me</span>
+                        <i>--></i>
+                    </a>
+                    <ul id="contact_me" style="font-size: 1.3em;margin-top: 10px;" style="list-style: none;display: inline;">
+                        <li>
+                            <a href="mailto:511248513@qq.com"><span class="fas fa-envelope"></span> </a>
+                            <a href="https://github.com/ShanYonggang" target="__blank"><span class="fab fa-github"></span> </a>
+                            <a href="https://jq.qq.com/?_wv=1027&k=5DmdAut" target="__blank"><span class="fab fa-qq"></span> </a>
+                            <a href="#" id="wechat_show"><span class="fab fa-weixin"></span> </a>
+                            <br>
+                            <!--显示个人微信的模块-->
+                            <span id="image_show" style="display: none">
+                                <img src="http://qiniu.shanyonggang.cn//introduce/wechat.jpg" alt="" style="width: 50%;height: 50%;border-radius: 10%;">
+                            </span>
+                        </li>
+                    </ul>
+                </div>
+                </div>
+            <hr>
+            <div class="detail_right">
+                <h3><span>相关文章</span></h3>
+                <ul class="five_articles">
+                    {% for article in five_articles %}
+                    <li>
+                        <i class="fas fa-angle-right"></i><a href="/article_detail/{{ article.id }}/">{{ article.title }}</a>
+                    </li>
+                    {% endfor %}
+                </ul>
+            </div>
+            <hr>
+            <div class="detail_right">
+                <h3><span>您曾看过</span></h3>
+                <ul class="five_articles">
+                    {% for article in all_articles %}
+                    <li>
+                        <i class="fas fa-angle-right"></i><a href="/article_detail/{{ article.article.id }}/">{{ article.article.title }}</a>
+                    </li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="myModal_give" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">请博主喝杯咖啡</h4>
+      </div>
+      <div class="modal-body">
+          <div class="container-fluid">
+              <div class="row">
+                  <div style="text-align: center">
+                      <img src="http://qiniu.shanyonggang.cn//pay/ailipay.png" alt="" width="40%">
+                      <img src="http://qiniu.shanyonggang.cn//pay/weichatpay.png" alt="" width="40%">
+                  </div>
+              </div>
+          </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!--引入代码高亮显示的js-->
+<script src="{% static 'prism/prism/lib/prism/prism_patched.min.js' %}"></script>
+<link rel="stylesheet" href="{% static 'prism/prism.css' %}">
+<!--自定义的js及css-->
+<script src="{% static 'blog_detail/js/detail_content.js' %}"></script>
+<link rel="stylesheet" href="{% static 'blog_detail/css/detail_blog.css' %}">
+<!--引入gittalk的js-->
+<!--<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.css">-->
+<!--<script src="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js"></script>-->
+
+<script>
+    // 加载 modal
+    function load_modal(article_id, comment_id) {
+        let modal_body = '#modal_body_' + comment_id;
+        let modal_id = '#comment_' + comment_id;
+        // 加载编辑器
+        if ($(modal_body).children().length === 0) {
+            let content = '<iframe src="/comment/post-comment/' +
+                article_id +
+                '/' +
+                comment_id +
+                '"' +
+                ' frameborder="0" style="overflow:visible;width: 100%; height: 100%;" id="iframe_' +
+                comment_id +
+                '"></iframe>';
+            $(modal_body).append(content);
+        };
+        $(modal_id).modal('show');
+    }
+</script>
+
+<script>
+//  根据用户ip统计用户访问详情页的次数
+var cur_url = window.location.href;
+var article_id = $('#article_id').text();
+var post_url = "https://www.shanyonggang.cn/visit_article/" + parseInt(article_id);
+console.log(post_url);
+function visit_article() {
+    $.ajax({
+        cache:false,
+        type:"GET",
+        url: post_url,
+        dataType:'json',
+        data: {
+            id: article_id,
+            cur_url:cur_url,
+            "csrfmiddlewaretoken":$('[name="csrfmiddlewaretoken"]').val()
+        },
+        async:true,
+        //异步为真，ajax提交的过程中，同时可以做其他的操作
+        success:function (response) {
+            if(response.status=="success"){
+                console.log(response.msg);
+            }else if(response.status=="fail"){
+                console.log(response.msg);
+            }
+        }
+    });
+}
+window.onload = visit_article;   //  网页加载完成后运行
+</script>
+<script>
+    $(".comment_user_login").click(
+        function () {
+            $(".user_login").trigger("click");
+        }
+    )
+</script>
+{% endblock content %}

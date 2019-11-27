@@ -1,0 +1,56 @@
+<!-- extends表明此页面继承自 base.html 文件 -->
+{% extends "base.html" %}
+{% load staticfiles %}
+
+<!-- 写入 base.html 中定义的 title -->
+{% block title %}
+回复 | 大圣的个人网站
+{% endblock title %}
+
+<!-- 写入 base.html 中定义的 content -->
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col-md-9">
+            <h3><span style="color: chocolate;">{{ comment.user }}</span>评论说：</h3><span>{{ comment.body|safe }}</span>
+            <hr>
+            <h4>此刻我想说：</h4>
+            <br>
+            <form action="." method="POST" id="reply_form">
+                {% csrf_token %}
+                <div class="form-group">
+                    <div id="test">
+                        {{ comment_form.media }}
+                        {{ comment_form.body }}
+                    </div>
+                </div>
+            </form>
+            <!-- 提交按钮 -->
+            <button onclick="confirm_submit({{ article_id }}, {{ parent_comment_id }})" class="btn btn-primary">发送</button>
+        </div>
+    </div>
+</div>
+    <script>
+    $(function(){
+        $(".django-ckeditor-widget").removeAttr('style');
+    });
+
+    function confirm_submit(article_id, comment_id){
+        // 从 ckeditor 中取值
+        let content = CKEDITOR.instances['id_body'].getData();
+        // 调用 ajax 与后端交换数据
+        $.ajax({
+            url: '/comments/post-comment/' + article_id + '/' + comment_id,
+            type: 'POST',
+            data: {body: content},
+            // 成功回调
+            success: function(e){
+                if(e === '200 OK'){
+                    alert('评论成功');
+                    window.location.href = "/article_detail/"+article_id+'/#comment_count';
+                }
+            }
+        })
+    }
+    </script>
+{% endblock content %}

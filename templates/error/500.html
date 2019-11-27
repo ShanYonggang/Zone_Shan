@@ -1,0 +1,27 @@
+{% load staticfiles %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>服务器错误 | 大圣的专属空间</title>
+
+
+    <link rel="stylesheet" href="{% static 'error/css/style_500.css' %}">
+
+</head>
+<body>
+    <div class="full-screen">
+        <div class='container'>
+            <span class="error-num">5</span>
+            <div class='eye'></div>
+            <div class='eye'></div>
+            <p class="sub-text">Oh eyeballs! Something went wrong. We're <span class="italic">looking</span> to see what happened.</p>
+            <a href="http://www.shanyonggang.cn">Go Back Home!</a>
+        </div>
+    </div>
+    <script src="{% static 'error/js/jquery.min.js' %}"></script>
+
+    <script src="{% static 'error/js/index.js' %}"></script>
+
+</body>
+</html>

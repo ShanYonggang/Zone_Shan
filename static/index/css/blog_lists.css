@@ -1,0 +1,72 @@
+button{
+    outline: none;
+}
+#content_home{
+    margin: 30px 1% 0 1%;
+}
+#title_blog{
+    border-bottom: 2px solid blue;
+    font-size: 25px;
+}
+#article_list{
+    margin-bottom: 50px;
+    border: 1px solid #e7e7e7;
+    padding-left: 2%;
+    padding-right: 2%;
+    border-radius: 5px;
+    box-shadow: 0px 2px 3px -2px grey;
+}
+#article_list a{
+    text-decoration: none;
+}
+#article_list:hover{
+    box-shadow: 0px 0px 10px 5px grey;
+}
+.blog_title{
+    margin-bottom: 25px;
+}
+.blog_title span{
+    margin-left: 10px;
+}
+.blog_title a{
+    color: #474747;
+    text-decoration: none;
+}
+.blog_title a:hover{
+    color: chocolate;
+}
+#content_show{
+    margin-top: 30px;
+    color: #474747;
+}
+#content_show:hover{
+    color: chocolate;
+}
+#introduce_info{
+    margin-top: 25px;
+}
+#introduce_info span{
+    margin-right: 20px;
+}
+
+/* 文章列表部分的css */
+.badge{
+    background-color: chocolate;
+}
+.blog_title span a{
+    color: cornsilk;
+}
+.badge:hover{
+    background-color: #28a745;
+    padding: 5px 10px 5px 10px;
+}
+#blog_title span a:hover{ 
+    text-decoration: none;
+    color:black;
+}
+.glyphicon-paperclip,.glyphicon-paperclip a{
+    color: #28a745;
+}
+.glyphicon-paperclip:hover,.glyphicon-paperclip a:hover{
+    color: chocolate;
+}

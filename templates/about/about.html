@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% block title %}关于 | 大圣的专属空间{% endblock %}
+{% block content %}
+<style>
+    .detail_intro li{
+        list-style:disc;
+        padding-top: 10px;
+    }
+</style>
+<div class="content" style="margin-left: auto;width: 90%;margin-right: auto;max-width: 1140px;">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-2 col-lg-2 col-12"></div>
+            <div class="col-md-8 col-lg-8 col-12">
+                {% for about in about_parts %}
+                <div class="row detail_intro" style="padding: 10px 0 20px 0;line-height: 30px;">
+                    <div style="text-align: center;font-size: 30px;color: #de1f6b;padding: 10px 0 10px 0;">{{ about.introduce }}</div>
+                    <hr>
+                    <div>{{ about.body|safe }}</div>
+                </div>
+                {% endfor %}
+                <div class="row" style="text-align: center;padding: 10px 0 20px 0;line-height: 30px;">
+                    <div style="font-size: 30px;color: #de1f6b;padding: 10px 0 10px 0;">联系方式</div>
+                    <hr>
+                    <div>
+                        遇到问题、扫二维码加我的个人微信：
+                    </div>
+                    <div>
+                        <img src="http://qiniu.shanyonggang.cn//introduce/wechat.jpg" alt="" style="width: 15%;height: 15%;border-radius: 10%;">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

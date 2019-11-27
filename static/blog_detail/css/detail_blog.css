@@ -1,0 +1,150 @@
+/*文章内容的css设置*/
+#article_body p img{
+    max-width: 100%;
+    height: 50%;
+    box-shadow: 0 0 50px grey;
+    margin-top: 30px;
+    margin-bottom: 30px;
+    border-radius: 15px;
+    text-align: center;
+}
+#article_body a{
+    text-decoration: none;
+}
+#article_body span{
+    line-height: 22px;
+}
+#article_body a:hover{
+    /*background-color: #28a745;*/
+    color:chocolate;
+}
+
+/*目录的css设置*/
+.blog_column li{
+    margin-top: 10px;
+    /*border-bottom: 1px dashed chocolate;*/
+}
+.blog_column li a{
+    padding: 0px;
+    font-size: 0.8em;
+    text-decoration: none;
+    border-bottom: 1px dashed chocolate;
+}
+.blog_column li a:hover{
+    font-size: 1.2em;
+    color: chocolate;
+}
+
+
+/*详细页面右侧的css文件*/
+.detail_right{
+    border: 1px solid #e7e7e7;
+    border-radius: 20px;
+    padding: 10px 5% 0 5%;
+}
+.detail_right h3{
+    text-align: center;
+    margin-top: -20px;
+}
+.detail_right h3 span{
+    background-color: #e7e7e7;
+    border-radius: 5px;
+    padding: 2px 5px 2px 5px;
+}
+#contact_me li a{
+    padding: 2px 0px 2px 5px;
+    margin: 0 5px 0 5px;
+    font-size: 25px;
+    background-color: #fff;
+    border-radius: 5px;
+}
+#contact_me li a{
+    color: #3d3d3d;
+    text-decoration: none;
+}
+#contact_me li a:hover{
+    color: chocolate;
+}
+.five_articles li{
+    padding: 3px;
+    color: #555;
+}
+.five_articles li a{
+    margin-left: 5px;
+    text-decoration: none;
+    color: #337ab7;
+}
+.five_articles li a:hover{
+    color: chocolate;
+    padding-left: 10px;
+}
+
+button{
+    outline: none;
+}
+.title{
+    text-align: center;
+}
+/*正文左右切换*/
+#article_body .row .btn:hover{
+    padding: 10px;
+    text-decoration: none;
+    background-color: #28a745;
+    color:black;
+}
+
+/* # 文章版权部分css */
+#bottom_int{
+    background-color: #e2e3e5;
+    border-radius: 10px;
+    padding: 20px 0px 10px 20px;
+}
+#bottom_int div{
+    margin-bottom: 10px;
+}
+/* 文章标签部分css */
+#content_tags{
+    /* text-align: center; */
+    font-size: 13px;
+    margin-bottom: 30px;
+
+}
+#content_tags a{
+    background-color: chocolate;
+    margin-left: 5px;
+    padding: 5px;
+    border-radius: 5px;
+    color: cornsilk;
+    margin-bottom: 20px;
+}
+#content_tags a:hover{
+    padding: 10px;
+    text-decoration: none;
+    background-color: #28a745;
+    color:black;
+}
+/* 赞赏部分css */
+#support_me #button_support{
+    border-radius: 5px;
+    padding: 10px;
+    border:1px solid crimson;
+    background: none;
+    font-size: 1.1em;
+    color: crimson;
+}
+#support_me #button_give{
+    border-radius: 5px;
+    padding: 10px;
+    border:1px solid #28a745;
+    background: none;
+    font-size: 1.1em;
+    color: #28a745;
+}
+#support_me #button_support:hover{
+    background-color: crimson;
+    color: #fff;
+}
+#support_me #button_give:hover{
+    background-color: #28a745;
+    color: #fff;
+}

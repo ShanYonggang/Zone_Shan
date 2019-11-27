@@ -1,0 +1,51 @@
+/* 关于我部分的css文件 */
+#about_me,#blog_tag{
+    box-shadow: 0px 2px 3px -2px grey;
+    border: 1px solid #e7e7e7;
+    padding: 10px 5% 20px 5%;
+    border-radius: 20px;
+    margin-bottom: 30px;
+}
+#about_me:hover,#blog_tag:hover{
+    box-shadow: 0px 0px 10px 5px grey;
+}
+#about_me h3,#blog_tag h3{
+    margin-top: -20px;
+    margin-left: 30%;
+    background-color: #e7e7e7;
+    text-align: center;
+    width: 40%;
+    border-radius: 5px;
+}
+#about_me div p img{
+    margin:2% 0 5% 0;
+}
+/* 标签云模块设计 */
+#tag_cloud{
+    margin: 0 -2% 0 -2%;
+}
+.tag_cloud_list{
+    display: inline-block;
+    margin-left: 10px;
+    margin-bottom: 5px;
+    background-color: chocolate;
+    padding: 5px;
+    border-radius: 5px;
+}
+.tag_cloud_list a{
+    color: cornsilk;
+    text-decoration: none;
+}
+.tag_cloud_list:hover{
+    background-color: #28a745;
+    color: black;
+    border-radius: 5px;
+}
+
+.friend_link a{
+    text-decoration: none;
+    color: #28a745;
+}
+.friend_link a:hover{
+    color: chocolate;
+}

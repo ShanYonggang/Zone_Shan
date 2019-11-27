@@ -1,0 +1,37 @@
+<!-- extends表明此页面继承自 base.html 文件 -->
+{% extends "base.html" %}
+{% load staticfiles %}
+{% load taggit_templatetags2_tags %}
+
+<!-- 写入 base.html 中定义的 title -->
+{% block title %}
+友链 | 大圣的专属空间
+{% endblock title %}
+
+<!-- 写入 base.html 中定义的 content -->
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12 link_submit" style="text-align: center; margin-top: 10px;font-size: 1.5em;">
+            <a href="{% url 'friend_link:add_link' %}">--点击此处，添加友情链接--</a>    
+        </div>
+    </div>
+    <div class="row" style="min-height: 400px">
+        <div class="col-md-2 col-lg-2 hidden-xs">
+        </div>
+        <div class="col-md-8 col-lg-8" style="text-align: left;font-size: 1.5em;">
+            <ul id="friend_link">
+                {% for friend_url in friend_link %}
+                <li style="margin-top: 30px;border-bottom: #e7e7e7 1px solid;padding-bottom: 5px;">
+                    <span class="hidden-xs"><a href="{{ friend_url.friend_url }}"><img src='{{ friend_url.url_image.url }}' alt="" width="40" height="40" style="border-radius: 50%;"></a></span>
+                    <span>{{ friend_url.submit_time|date:'Y-m-d' }}</span>
+                    <span><a href="{{ friend_url.friend_url }}" target="_blank">{{ friend_url.website_name }}</a></span>
+                    <span class="hidden-xs"><a href="{{ friend_url.friend_url }}" target="_blank">{{ friend_url.name }}</a></span>
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+</div>
+<link rel="stylesheet" href="{% static 'friend_link/css/friend_link.css' %}">
+{% endblock content %}

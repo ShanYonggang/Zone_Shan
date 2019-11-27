@@ -1,0 +1,53 @@
+<!-- extends表明此页面继承自 base.html 文件 -->
+{% extends "base.html" %}
+{% load staticfiles %}
+
+<!-- 写入 base.html 中定义的 title -->
+{% block title %}
+资料文档 | 大圣的专属空间
+{% endblock title %}
+
+<!-- 写入 base.html 中定义的 content -->
+{% block content %}
+    <div class="container">
+        <div class="row" style="height: auto !important;">
+            <div class="col-md-12">
+                <h4 style="color: chocolate">
+                    <i class="fas fa-hand-holding-heart" style="font-size: 1.2em"></i>
+                    博主学习过程中遇到的网站和图书以及常用软件都在此分享给大家
+                </h4>
+                <hr>
+                <div class="row">
+                    <div style="color: #155724;background-color: #d4edda;border-color: #c3e6cb;padding: 15px;border-radius: 10px;">
+                        <i class="fab fa-internet-explorer"></i>  学习网站专区
+                    </div>
+                    {% for url in urls %}
+                    <div class="col-md-4" style="margin-top: 15px;">
+                        <a href="{{ url.search_url }}" target="_blank">{{ url.name }}</a>
+                    </div>
+                    {% endfor %}
+                </div>
+                <div class="row" style="margin-top: 15px">
+                    <div style="color: #856404;background-color: #fff3cd;border-color: #ffeeba;padding: 15px;border-radius: 10px;">
+                        <i class="fas fa-book-open"></i>  图书资料下载专区
+                    </div>
+                    {% for book in books %}
+                    <div class="col-md-4" style="margin-top: 15px;">
+                        <a href="{{ book.download }}" target="_blank">{{ book.title }}</a>
+                    </div>
+                    {% endfor %}
+                </div>
+                <div class="row" style="margin-top: 15px">
+                    <div style="color: #854c74;background-color: #fff3cd;border-color: #ffeeba;padding: 15px;border-radius: 10px;">
+                        <i class="fas fa-list-alt"></i>  软件下载专区
+                    </div>
+                    {% for software in softwares %}
+                    <div class="col-md-4" style="margin-top: 15px;">
+                        <a href="{{ software.download }}" target="_blank">{{ software.title }}</a>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock content %}

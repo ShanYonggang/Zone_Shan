@@ -1,0 +1,63 @@
+{% load staticfiles %}
+<!-- Footer -->
+<div>
+    <br><br>
+</div>
+<style>
+    .container p a{
+        text-decoration: none;
+    }
+    .container p a:hover{
+        color: chocolate;
+    }
+</style>
+<footer class="py-3 bg-dark fixed-bottom" style="background-color: #e2e3e5;padding-top: 15px;border-top: 2px solid chocolate;">
+    <div class="container-fluid">
+        <p class="m-0 text-center text-white">Copyright &copy; <a href="https://www.shanyonggang.cn">www.shanyonggang.cn</a>2019&nbsp&nbsp&nbsp&nbsp<span id="htmer_time"></span></p>
+        <p class="m-0 text-center text-white">
+            服务托管于<a href="https://www.aliyun.com/">阿里云</a> |
+            图片托管于<a href="https://portal.qiniu.com/qvm/active?code=13820658351CVLf">七牛云</a> |
+            Powered by <a href="https://docs.djangoproject.com/zh-hans/2.1/">Django</a> & <a href="https://v3.bootcss.com/">Bootstrap</a> |
+            应用<a href="https://mta.qq.com/">腾讯统计分析</a> |
+            京ICP备19032226号-1</p>
+    </div>
+</footer>
+<!--网站计时-->
+<script>
+    function secondToDate(second) {
+        if (!second) {
+            return 0;
+        }
+        var time = new Array(0, 0, 0, 0, 0);
+        if (second >= 365 * 24 * 3600) {
+            time[0] = parseInt(second / (365 * 24 * 3600));
+            second %= 365 * 24 * 3600;
+        }
+        if (second >= 24 * 3600) {
+            time[1] = parseInt(second / (24 * 3600));
+            second %= 24 * 3600;
+        }
+        if (second >= 3600) {
+            time[2] = parseInt(second / 3600);
+            second %= 3600;
+        }
+        if (second >= 60) {
+            time[3] = parseInt(second / 60);
+            second %= 60;
+        }
+        if (second > 0) {
+            time[4] = second;
+        }
+        return time;
+    }</script>
+<script type="text/javascript" language="javascript">
+    function setTime() {
+        var create_time = Math.round(new Date(Date.UTC(2019, 10, 05, 22, 42, 23)).getTime() / 1000);
+        var timestamp = Math.round((new Date().getTime() + 8 * 60 * 60 * 1000) / 1000);
+        currentTime = secondToDate((timestamp - create_time));
+        currentTimeHtml = '网站已持续运行：' + currentTime[0] + '年 ' + currentTime[1] + '天 '
+                + currentTime[2] + '时 ' + currentTime[3] + '分 ' + currentTime[4]
+                + '秒';
+        document.getElementById("htmer_time").innerHTML = currentTimeHtml;
+    }    setInterval(setTime, 1000);
+</script>

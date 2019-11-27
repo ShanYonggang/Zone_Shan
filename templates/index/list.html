@@ -1,0 +1,244 @@
+<!-- extends表明此页面继承自 base.html 文件 -->
+{% extends "base.html" %}
+{% load staticfiles %}
+{% load taggit_templatetags2_tags %}
+
+<!-- 写入 base.html 中定义的 title -->
+{% block title %}
+愿生活不再苦闷 | 大圣的专属空间
+{% endblock title %}
+
+<!-- 写入 base.html 中定义的 content -->
+{% block content %}
+
+<div class="container-fluid" id="content_home">
+    <div class="row">
+        <!-- 定义左侧内容框 -->
+        <div class="col-md-8 col-xs-12 col-lg-8 col-sm-12">
+            {% if search_tag != None %}
+            <div style="padding: 10px 10px 15px 5px;font-size: 1.4em;">
+                <i class="glyphicon glyphicon-search"></i>  为您找到标签为"<span style="color: red">{{ search_tag }}</span>"的如下相关文章：
+            </div>
+            {% endif %}
+            {% for article in articles %}
+            <div id="article_list" class="row">
+                {% if article.blog_photo %}
+                <div class="col-md-4 col-lg-4 hidden-xs hidden-sm" style="overflow: hidden;margin-left: -3.5%;margin-top: 2%;">
+                    <a href="{% url 'index:article_detail' article.id %}">
+                        <img src="{{ article.blog_photo.url }}" alt="avatar" style="border-radius: 5px;max-width: 85%;">
+                    </a>
+                </div>
+                {% endif %}
+                {% if article.blog_photo %}
+                <div class="col-md-9 col-lg-9 col-xs-12" style="margin-left: -5.5%;">
+                {% else %}
+                <div class="col-md-12 col-lg-12 col-xs-12" style="margin-left: -1.5%;">
+                {% endif %}
+                    <h3 class="blog_title" style="font-size: 1.25em;font-weight: bolder;">
+                        <a href="{% url 'index:article_detail' article.id %}">{{ article.title }}</a>
+                        <span>
+                            {% for tag in article.tags.all %}
+                                <a href="{% url 'index:blog_list' %}?tag={{ tag }}"class="badge badge-secondary">
+                                    {{ tag }}
+                                </a>
+                            {% endfor %}
+                        </span>
+                    </h3>
+                    <a href="{% url 'index:article_detail' article.id %}" id="content_show">{{ article.body|striptags|slice:'100' }}...</a>
+                    <p id="introduce_info">
+                        <span class="glyphicon glyphicon-paperclip"><a href="{% url 'index:blog_list' %}?column_id={{ article.column_id }}">{{ article.column }}</a></span>
+                        <span class="glyphicon glyphicon-user">{{ article.author }}</span>
+                        <span class="glyphicon glyphicon-time">{{ article.create_time }}</span>
+                        <span class="glyphicon glyphicon-eye-open">{{ article.article_view }}</span>
+                    </p>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        <!-- 定义右侧内容框 -->
+        <!-- 自我介绍部分 -->
+        <div class="row hidden-xs hidden-sm">
+            <div class="col-lg-4 col-md-4 col-xs-4">
+                <div style="text-align: center;margin-bottom: 20px;">
+                    <iframe scrolling="no" src="https://tianqiapi.com/api.php?style=tf&skin=pitaya" frameborder="0" width="160" height="24" allowtransparency="true"></iframe>
+                </div>
+                <div id="about_me">
+                    <h3><span>关于我</span><span></span></h3>
+                    <div style="text-align: center;font-size: 1.1em;">
+                        <p>
+                            <img src='{% static "index/blog_list/upload/about-image.jpg" %}' alt width=120 style="border-radius: 20px">
+                            <br> 
+                            汽车工程师，现就职于北京某汽车公司
+                            <br>
+                            业余时间敲代码，主要是用Python语言
+                            <br>
+                            业余爱好：健身、摄影、登山
+                            <br>
+                            建此站的目的主要是记录自己的学习和日常生活
+                        </p> 
+                        <a href="/about/">
+                            <span>More About Me</span>
+                            <i>-----></i>
+                        </a>
+                        <ul id="contact_me" style="font-size: 1.3em;margin-top: 10px;" style="list-style: none;display: inline;">
+                            <li>
+                                <a href="mailto:511248513@qq.com"><span class="fas fa-envelope"></span> </a>
+                                <a href="https://github.com/ShanYonggang" target="__blank"><span class="fab fa-github"></span> </a>
+                                <a href="https://jq.qq.com/?_wv=1027&k=5DmdAut" target="__blank"><span class="fab fa-qq"></span> </a>
+                                <a href="#" id="wechat_show"><span class="fab fa-weixin"></span> </a>
+                                <br>
+                                <!--显示个人微信的模块-->
+                                <span id="image_show" style="display: none">
+                                    <img src="http://qiniu.shanyonggang.cn//introduce/wechat.jpg" alt="" style="width: 50%;height: 50%;border-radius: 10%;">
+                                </span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <div id="blog_tag" style="padding:25px 25px 10px 25px;">
+                    <h3 style="margin-top: -40px;"><span>最新发表</span></h3>
+                    <ul class="five_articles">
+                        {% for article in five_new_articles %}
+                        <li style="padding: 3px;font-size: 1.1em;color: #1b6d85;">
+                            <i class="fas fa-angle-right"></i><a href="/article_detail/{{ article.id }}/">   {{ article.title }}</a>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+                <div id="blog_tag" style="padding:25px 25px 10px 25px;">
+                    <h3 style="margin-top: -40px;"><span>热门文章</span></h3>
+                    <ul class="five_articles">
+                        {% for article in five_articles %}
+                        <li style="padding: 3px;font-size: 1.1em;color: #1b6d85;">
+                            <i class="fas fa-angle-right"></i><a href="/article_detail/{{ article.id }}/">   {{ article.title }}</a>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+                <style>
+                    .five_articles li a{
+                        text-decoration: none;
+                    }
+                    .five_articles li a:hover{
+                        padding-left: 10px;
+                        color: chocolate;
+                    }
+                </style>
+                <div id="blog_tag" style="padding:15px 20px 15px 20px;">
+                    <h3 style="margin-top: -30px;"><span>标签云</span><span></span></h3>
+                    <div style="text-align: center;">
+                        <p id="tag_cloud">
+                            <br>
+                            <!-- 标签 -->
+                            <div id="tags">
+                            {% get_tagcloud as tags %}
+                            {% for tag in tags %}
+                                <a href="{% url 'index:blog_list' %}?tag={{ tag }}">{{ tag }}({{ tag.num_times }})</a>
+                            {% endfor %}
+                            </div>
+                        </p>
+                    </div>
+                </div>
+                <div id="blog_tag" class="friend_link">
+                    <h3 style="width: 50%;margin-left:25%;margin-top: -20px"><span>友情链接</span><span></span></h3>
+                    <div style="text-align: center;margin-top: 20px;">
+                        <ul style="font-size: 1.1em;margin-top: 10px;">
+                            {% for friend_url in friend_link %}
+                            <li style="margin-bottom: 10px;">
+                                <a href="{{ friend_url.friend_url }}" target="_blank"><img src='{{ friend_url.url_image.url }}' alt="" width="40" height="40" style="border-radius: 50%;">&nbsp;&nbsp;&nbsp;{{ friend_url.website_name }}</a>
+                            </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </div>
+                <style>
+                    #contact_me li a{
+                        padding: 2px 0px 2px 5px;
+                        margin: 0 5px 0 5px;
+                        font-size: 25px;
+                        background-color: #fff;
+                        border-radius: 5px;     
+                    }
+                    #contact_me li a{
+                        color: #3d3d3d;
+                        text-decoration: none;
+                    }
+                    #contact_me li a:hover{
+                        color: chocolate;
+                    }
+                </style>
+            </div>
+        </div>
+    </div>
+    <!-- 页码导航 -->
+    <div class="pagination row">
+        <div class="m-auto">
+            <span class="step-links">
+                <!-- 如果不是第一页，则显示上翻按钮 -->
+                {% if articles.has_previous %}
+                    <a href="?page=1" class="btn btn-success">
+                        &laquo; 1
+                    </a>
+                    <span>...</span>
+                    <a href="?page={{ articles.previous_page_number }}" class="btn btn-secondary">
+                        {{ articles.previous_page_number }}
+                    </a>
+                {% endif %}
+
+                <!-- 当前页面 -->
+                <span class="current btn btn-danger btn-lg">
+                    {{ articles.number }}
+                </span>
+
+                <!-- 如果不是最末页，则显示下翻按钮 -->
+                {% if articles.has_next %}
+                    <a href="?page={{ articles.next_page_number }}" class="btn btn-secondary">
+                        {{ articles.next_page_number }}
+                    </a>
+                    <span>...</span>
+                    <a href="?page={{ articles.paginator.num_pages }}" class="btn btn-success">
+                        {{ articles.paginator.num_pages }} &raquo;
+                    </a>
+                {% endif %}
+            </span>
+        </div>
+    </div>
+</div>
+<link rel="stylesheet" href="{% static 'index/css/right_index.css' %}">
+<style>
+ #tags a{height:26px; line-height:26px;padding-right:6px;}
+ #tags .tags0{}
+ #tags .tags1{color:#C00; font-size:17px;}
+ #tags .tags2{color:#030; font-size:16px;}
+ #tags .tags3{color:#00F;}
+ #tags .tags4{color: #d87b26; font-size:14px;}
+ #tags .tags5{color: #5cccb8; font-size:20px;}
+ #tags .tags6{color: #f026ff; font-size:12px;}
+ #tags .tags7{color:#030; font-weight:bold; font-size:14px;}
+ #tags .tags8{color:#F06; font-weight:bold;}
+ #tags .tags9{color: #ccc02d; font-weight:bold;font-size:16px;}
+ #tags .tags10{color:#090; font-weight:bold;font-size:18px;}
+ #tags .tags11{color:#09F;}
+ #tags .tags12{color:#F90;font-size:14px;}
+ #tags .tags13{color: #4bfff7; font-weight:bold;}
+ #tags .tags14{color: #c8a7cc; font-weight:bold;font-size:16px;}
+ #tags .tags15{color: #998b40; font-weight:bold;font-size:18px;}
+ #tags .tags16{color: #ff32bb;}
+ #tags .tags17{color: #d8c6ff;font-size:14px;}
+ #tags a:hover{ color: #d87b26; text-decoration:underline;}
+ .w95{ width:95%; margin:0 auto; padding-top:6px; padding-bottom:6px;}
+ .taglist .w95{}
+ </style>
+<script type="text/javascript">
+     $(document).ready(function() {
+     var tags_a = $("#tags a");
+     tags_a.each(function(){
+     var x = 17;
+     var rand = parseInt(Math.random() * x);
+     $(this).addClass("tags"+rand);
+     });
+     })
+ </script>
+<!--# 自定义的主页js-->
+<script src="{% static 'index/js/list_index.js' %}"></script>
+{% endblock content %}
