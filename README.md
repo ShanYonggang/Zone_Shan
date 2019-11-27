@@ -1,3 +1,5 @@
+[![](https://img.shields.io/badge/python-3.6.8-orange.svg)](https://www.python.org/downloads/release/python-370/) [![](https://img.shields.io/badge/django-2.1.0-green.svg)](https://docs.djangoproject.com/en/2.1/releases/2.1/)
+
 ### 关于网站
 - 本网站是一个个人博客网站，主要分享博主的编程学习心得
 - 网站主要使用 django + mysql + nginx + uwsgi搭建，项目部署在阿里云服务器上
